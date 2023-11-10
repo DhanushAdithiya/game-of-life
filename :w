@@ -1,0 +1,85 @@
+#[derive(Debug)]
+struct State{
+    board: Vec<Vec<bool>>,
+    dim: u32,
+    fps: u32,
+    start: bool
+}
+
+impl State {
+    fn new(size: u32) -> Self {
+        Self { 
+            board: vec![vec![false; size as usize];size as usize], 
+            fps: 60,
+            start: false,
+            dim: size,
+        }
+    }
+
+    fn randomize(&mut self) {
+        for items in self.board.iter_mut() {
+            for vals in items.iter_mut() {
+                if rand::random::<bool>() == true {
+                    *vals = true;
+                }
+            }
+        }
+    } 
+
+    fn display_board(&self) {
+        for col in &self.board {
+            println!("");
+            for row in col {
+                if *row == false {
+                    print!("-");
+                } else {
+                    print!("#")
+                }
+            } 
+        }
+    }
+
+
+    fn iteration(&mut self) {
+        for cols in 0..self.dim {
+            for row in 0..self.dim {
+                let mut sum: u32 = 0;
+                for i in -1..2 {
+                    for j in -1..2 {
+                        let r = cols as i32 + (i);
+                        let c = row as i32 + (j);
+
+                        if j == 0 && i == 0 {
+                            continue;
+                        } else if !self.board.get(c).unwrap().(r) {
+                            continue;
+                        } else if self.board[c as usize][r as usize]  == true {
+                            sum +=1;
+                        }
+                
+                    }
+
+                }
+                if sum >= 3 {
+                    self.board[cols as usize][row as usize] = true;
+                } else {
+                    self.board[cols as usize][row as usize] = false;
+                }
+            }
+        }
+    }
+
+}
+
+
+fn main() {
+    let mut board = State::new(5);
+    board.randomize();
+    println!("BEFORE FIRST ITERATION \n");
+    board.display_board();
+    board.iteration();
+    println!("AFTER FIRST ITERATION \n");
+    board.display_board();
+
+    
+}
