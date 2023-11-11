@@ -5,14 +5,12 @@ use std::vec;
 #[derive(Debug)]
 struct State {
     board: Vec<Vec<bool>>,
-    dim: u32,
 }
 
 impl State {
     fn new(size: u32) -> Self {
         Self {
             board: vec![vec![false; size as usize]; size as usize],
-            dim: size,
         }
     }
 
@@ -40,7 +38,6 @@ impl State {
     }
 
     fn iteration(&mut self) {
-
         let original_board = &self.board.clone();
         for cols in 0..self.board.len() {
             for row in 0..self.board[0].len() {
@@ -53,20 +50,18 @@ impl State {
                             continue;
                         }
                         if let Some(val) = original_board
-                                .get(c as usize)
-                                .and_then(|row| row.get(r as usize))
-                            {
-                                if *val {
-                                    sum += 1;
-                                } else {
-                                    continue;
-                                }
+                            .get(c as usize)
+                            .and_then(|row| row.get(r as usize))
+                        {
+                            if *val {
+                                sum += 1;
+                            } else {
+                                continue;
                             }
-        
+                        }
                     }
-                    
                 }
-                
+
                 // println!("THE CELL[{cols}{row}] has a sum of {sum}" );
                 if original_board[cols as usize][row as usize] == true && sum < 2 {
                     self.board[cols as usize][row as usize] = false
@@ -79,9 +74,8 @@ impl State {
                 } else if original_board[cols as usize][row as usize] == false && sum == 3 {
                     self.board[cols as usize][row as usize] = true
                 }
-        
             }
-        } 
+        }
     }
 }
 
@@ -92,34 +86,11 @@ fn main() {
     let interval = Duration::from_secs(1);
     let mut next_time = Instant::now() + interval;
 
-    let b2 = vec![
-        vec![false, false, false, false,false, false, false, false,false, false, false, false],
-        vec![false, false, true, false,false, false, false, false,false, false, false, false],
-        vec![true, false, true, false,false, false, false, false,false, false, false, false],
-        vec![false, true, true, false,false, false, false, false,false, false, false, false],
-        vec![false, false, false, false,false, false, false, false,false, false, false, false],
-        vec![false, false, false, false,false, false, false, false,false, false, false, false],
-        vec![false, false, false, false,false, false, false, false,false, false, false, false],
-        vec![false, false, false, false,false, false, false, false,false, false, false, false],
-        vec![false, false, false, false,false, false, false, false,false, false, false, false],
-        vec![false, false, false, false,false, false, false, false,false, false, false, false],
-        vec![false, false, false, false,false, false, false, false,false, false, false, false],
-        vec![false, false, false, false,false, false, false, false,false, false, false, false],
-    ];
-
-    let mut state2 = State {
-        board: b2,
-        dim: 12,
-    };
-
-    
-   loop {
+    loop {
         std::process::Command::new("clear").status().unwrap();
-        state2.display_board();
-        state2.iteration();
+        board.display_board();
+        board.iteration();
         sleep(next_time - Instant::now());
         next_time += interval;
-    } 
-
-
+    }
 }
